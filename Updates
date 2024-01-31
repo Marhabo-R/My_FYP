@@ -1,0 +1,8 @@
+●	Fixed product filter bugs
+●	Fixed vendor not found bugs on shop page
+●	Updated CKEDITOR to V5
+●	Updated Settings.py Installed App to include Ckeditor V5
+●	Fixed Cart Update Bug
+●	Removed Redundant Code
+
+
