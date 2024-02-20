@@ -1,0 +1,78 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %}
+    <main class="main pages">
+        <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                    <span></span> Pages <span></span> Contact
+                </div>
+            </div>
+        </div>
+        <div class="page-content pt-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-10 col-lg-12 m-auto">
+                        <section class="mb-50">
+                            <div class="row">
+                                <div class="col-xl-8">
+                                    <div class="contact-from-area padding-20-row-col">
+                                        <h2 class="mb-10">Drop Us a Line or contact us through:</h2>
+                                        <div class="mobile-social-icon">
+                                            <a href="#"><img src="{% static 'assets/imgs/theme/icons/whatsapp-icon.svg' %}" alt="WhatsApp" /></a>
+                                            <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-facebook-white.svg' %}" alt="Facebook" /></a>
+                                            <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-instagram-white.svg' %}" alt="Instagram" /></a>
+                                        </div>                                    
+                                        <h4 class="text-success" id="message-response"></h4>
+                                        <form class="contact-form-style mt-30" id="contact-form-ajax"  method="POST">
+                                            {% csrf_token %}
+                                            <div class="row">
+                                                <h7>All required fields are marked with (*) and must be filled in to submit the form.</h7>   
+                                                <div class="col-lg-6 col-md-6">
+                                                    <div class="input-style mb-20">
+                                                        <p style="font-size: smaller;">Please enter your name *</p>
+                                                        <input name="full_name" id="full_name"   type="text" required />
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6">
+                                                    <div class="input-style mb-20">
+                                                        <p style="font-size: smaller;">WhatsApp Number: Please provide if you prefer to be contacted via WhatsApp</p>
+                                                        <input name="telephone"  id="phone"  type="tel" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6">
+                                                    <div class="input-style mb-20">
+                                                        <p style="font-size: smaller;">Please enter your phone number *</p>
+                                                        <input name="telephone"  id="phone"  type="tel" required />
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6">
+                                                    <div class="input-style mb-20">
+                                                        <p style="font-size: smaller;">Subject</p>
+                                                        <input name="subject"  id="subject" type="text" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12">
+                                                    <div class="textarea-style mb-30">
+                                                        <p style="font-size: smaller;">For assistance, please detail your inquiry in the space provided below. Our customer service team will review your message and get back to you with a solution at the earliest opportunity.</p>
+                                                        <textarea name="message" id="message"  required ></textarea>
+                                                    </div>
+                                                    <button id="contact-form-ajax" class="suebmit submit-auto-width" type="submit">Send message</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <p class="form-messege"></p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 pl-50 d-lg-block d-none">
+                                    <img class="border-radius-15 mt-50" src="{% static 'assets/imgs/page/contact-2.png' %}" alt="" />
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock content %}
