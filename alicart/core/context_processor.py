@@ -3,6 +3,7 @@ from core.models import Product, Category, Vendor, CartOrder, ProductImages, Pro
 from django.db.models import Min, Max
 from django.contrib import messages
 
+
 def default(request):
     categories = Category.objects.all()
     vendors = Vendor.objects.all()
@@ -18,8 +19,6 @@ def default(request):
     else:
         wishlist = 0
 
-    
-    
     try:
         address = Address.objects.get(user=request.user)
     except:
