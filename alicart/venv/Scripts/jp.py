@@ -1,4 +1,4 @@
-#!C:\Users\markhabo.rakhmatsh\Downloads\V1 - Complete Source Code\Source Code\venv\Scripts\python.exe
+#!C:\Users\markhabo.rakhmatsh\Downloads\1st\1st\venv\Scripts\python.exe
 
 import sys
 import json

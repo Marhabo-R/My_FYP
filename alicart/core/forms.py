@@ -9,3 +9,10 @@ class ProductReviewForm(forms.ModelForm):
     class Meta:
         model = ProductReview
         fields = ['review', 'rating']
+
+
+from userauths.models import ContactUs
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = ContactUs
+        fields = ['full_name', 'email', 'phone', 'subject', 'message']

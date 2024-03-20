@@ -10,7 +10,7 @@
             <p>AliCart Details</p>
         </div>
         <div>
-            <a href="#" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Create report</a>
+            <a href="{% url 'core:generate_report' %}" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Create report</a>
         </div>
     </div>
     <div class="row">
@@ -140,7 +140,7 @@
                                 </td>
                                 <td><i class="material-icons md-payment font-xxl text-muted mr-5"></i> Paypal</td>
                                 <td>
-                                    <a href="#" class="btn btn-xs"> View details</a>
+                                    <a href="{% url 'useradmin:order_details' order_id=l.id %}" class="btn btn-xs"> View details</a>
                                 </td>
                             </tr>
                             {% endfor %}

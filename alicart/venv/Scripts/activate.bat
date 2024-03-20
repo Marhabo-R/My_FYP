@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\markhabo.rakhmatsh\Downloads\V1 - Complete Source Code\Source Code\venv
+set VIRTUAL_ENV=C:\Users\markhabo.rakhmatsh\Downloads\1st\1st\venv
 
 if not defined PROMPT set PROMPT=$P$G
 

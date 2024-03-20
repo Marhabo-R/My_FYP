@@ -83,9 +83,9 @@ def vendor_detail_view(request, vid):
     return render(request, "core/vendor-detail.html", context)
 
 
+from django.core.exceptions import ObjectDoesNotExist
 def product_detail_view(request, pid):
     product = Product.objects.get(pid=pid)
-    # product = get_object_or_404(Product, pid=pid)
     products = Product.objects.filter(category=product.category).exclude(pid=pid)
 
     # Getting all reviews related to a product
@@ -97,18 +97,21 @@ def product_detail_view(request, pid):
     # Product Review form
     review_form = ProductReviewForm()
 
-
     make_review = True 
 
     if request.user.is_authenticated:
-        address = Address.objects.get(status=True, user=request.user)
-        user_review_count = ProductReview.objects.filter(user=request.user, product=product).count()
-
-        if user_review_count > 0:
+        try:
+            address = Address.objects.get(status=True, user=request.user)
+            user_review_count = ProductReview.objects.filter(user=request.user, product=product).count()
+            if user_review_count > 0:
+                make_review = False
+        except ObjectDoesNotExist:
+            address = None
             make_review = False
-    
-    address = "Login To Continue"
+            messages.warning(request, "No active address found. Please add an address.")
 
+    else:
+        address = "Login To Continue"
 
     p_image = product.p_images.all()
 
@@ -488,9 +491,43 @@ def remove_wishlist(request):
 
 
 
-# Other Pages 
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from .forms import ContactForm
+
 def contact(request):
-    return render(request, "core/contact.html")
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            # Save the form data to the database
+            form.save()
+
+            # Get cleaned data from the form
+            full_name = form.cleaned_data['full_name']
+            email = form.cleaned_data['email']
+            phone = form.cleaned_data['phone']
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+
+            # Construct email message
+            email_message = f"Name: {full_name}\nEmail: {email}\nPhone: {phone}\nSubject: {subject}\nMessage: {message}"
+
+            try:
+                # Send email
+                send_mail(
+                    'Contact Form Submission',
+                    email_message,
+                    'sender@example.com',  # Sender's email
+                    ['your@gmail.com'],  # Recipient's email
+                    fail_silently=False,
+                )
+                return render(request, 'core/contact.html', {'success_message': 'Message sent successfully!'})
+            except Exception as e:
+                return render(request, 'core/contact.html', {'error_message': str(e)})
+    else:
+        form = ContactForm()
+
+    return render(request, 'core/contact.html', {'form': form})
 
 
 def ajax_contact_form(request):
@@ -532,3 +569,82 @@ def sign_in(request):
 
 def sign_up(request):
     return render(request, "userauths/sign-up.html")
+
+
+
+
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+from core.models import CartOrder, Category  # Import your models
+
+def generate_report(request):
+    # Your logic to fetch data for the report
+    revenue = 13500.50
+    total_orders_count = 50
+    all_categories = Category.objects.all()
+    latest_orders = CartOrder.objects.all().order_by('-order_date')[:10]
+
+    # Define the styles for the report
+    styles = getSampleStyleSheet()
+    style_heading = styles["Heading1"]
+    style_body = styles["BodyText"]
+
+    # Create the elements for the PDF report
+    report_elements = []
+
+    # Add a heading
+    report_elements.append(Paragraph("Report", style_heading))
+    report_elements.append(Spacer(1, 12))
+
+    # Add revenue and total orders count
+    report_elements.append(Paragraph(f"Total Revenue: ${revenue}", style_body))
+    report_elements.append(Paragraph(f"Total Orders: {total_orders_count}", style_body))
+    report_elements.append(Spacer(1, 12))
+
+    # Add a table of categories
+    category_table_data = [["Category ID", "Category Name"]]
+    for category in all_categories:
+        category_table_data.append([category.id, category.title])  # Use title attribute for category name
+    category_table = Table(category_table_data)
+    category_table.setStyle(TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                                         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                                         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                                         ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                                         ('GRID', (0, 0), (-1, -1), 1, colors.black)]))
+    report_elements.append(Paragraph("Categories:", style_body))
+    report_elements.append(category_table)
+    report_elements.append(Spacer(1, 12))
+
+    # Add a table of latest orders
+    order_table_data = [["Order ID", "User", "Date", "Price"]]
+    for order in latest_orders:
+        order_table_data.append([order.id, order.user.username, order.order_date, order.price])
+    order_table = Table(order_table_data)
+    order_table.setStyle(TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                                      ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                                      ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                      ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                      ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                                      ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                                      ('GRID', (0, 0), (-1, -1), 1, colors.black)]))
+    report_elements.append(Paragraph("Latest Orders:", style_body))
+    report_elements.append(order_table)
+    report_elements.append(Spacer(1, 12))
+
+    # Create a PDF document
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+    doc = SimpleDocTemplate(response, pagesize=letter)
+
+    # Add elements to the PDF document and generate the PDF
+    doc.build(report_elements)
+
+    return response
+
+
