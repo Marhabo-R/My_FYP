@@ -110,7 +110,7 @@ class Product(models.Model):
     price = models.DecimalField(
         max_digits=99999999999999, decimal_places=2, default="1.99")
     old_price = models.DecimalField(
-        max_digits=99999999999999, decimal_places=2, default="2.99")
+        max_digits=99999999999999, decimal_places=2,  null=True, blank=True)
 
     specifications = CKEditor5Field(config_name='extends', null=True, blank=True)
     # specifications = models.TextField(null=True, blank=True)
