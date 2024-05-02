@@ -19,14 +19,13 @@
         border-radius: 3px;
     }
      
-    #id_category {
+    #id_category, #id_vendor {
         position: relative;
         display: block;
         width: 15em;
         font-family: poppins;
         border: none;
         height: 3em;
-        line-height: 3;
         overflow: hidden;
         border-radius: .25em;
         padding-bottom: 10px;
@@ -63,7 +62,7 @@
                                 {% endif %}
                                     {% csrf_token %}
                                     <div class="mb-4">
-                                        <label for="product_name" class="form-label">Product title</label>
+                                        <label class="form-label">Product title</label>
                                         {{form.title}}
                                         <!-- <input type="text" placeholder="Type here" class="form-control" id="product_name" /> -->
                                     </div>
@@ -87,7 +86,7 @@
                                         <div class="col-lg-4">
                                             <div class="mb-4">
                                                 <label class="form-label">Old price</label>
-                                        {{form.old_price}}
+                                                {{form.old_price}}
 
                                                 <!-- <input placeholder="$" type="text" class="form-control" /> -->
                                             </div>
@@ -126,7 +125,7 @@
                                     <div class="mb-4">
                                         <label class="form-label">Tags</label>
                                         {{form.tags}}
-                                        <small class="text-muted">Seperate tag using comma</small>
+                                        <small class="text-muted">Seperate tags using commas</small>
                                         <!-- <input type="text" placeholder="%" class="form-control" id="product_name" /> -->
                                     </div>
 
@@ -172,7 +171,12 @@
                                         <label class="form-label">Category</label>
                                         {{form.category}}
                                     </div>
-                                    
+                                </div>
+                                <div class="row gx-2">
+                                    <div class="col-sm-6 mb-3">
+                                        <label class="form-label">Vendor</label>
+                                        {{form.vendor}}
+                                    </div>
                                 </div>
                                 <!-- row.// -->
                             </div>

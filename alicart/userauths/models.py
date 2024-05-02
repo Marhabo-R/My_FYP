@@ -16,6 +16,14 @@ class User(AbstractUser):
         return self.username
 
 
+class TempUser(models.Model):
+    email = models.EmailField(unique=True)
+    otp = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.email
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(upload_to="image")
@@ -46,6 +54,7 @@ class ContactUs(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
+
 
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()

@@ -23,22 +23,21 @@
                     </div>
                 </div>
                 <div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
-                    <select class="form-select">
+                    <select class="form-select" id="categorySelect">
                         <option selected>All category</option>
-                        <option>Electronics</option>
-                        <option>Clothes</option>
-                        <option>Automobile</option>
+                        {% for category in all_categories %}
+                            <option>{{ category.title }}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="col-md-2 col-6">
                     <input type="date" value="02.05.2021" class="form-control" />
                 </div>
                 <div class="col-md-2 col-6">
-                    <select class="form-select">
-                        <option selected>Status</option>
+                    <select class="form-select" id="statusSelect">
+                        <option selected>Show all</option>
                         <option>Active</option>
                         <option>Disabled</option>
-                        <option>Show all</option>
                     </select>
                 </div>
             </div>
@@ -46,7 +45,7 @@
         <!-- card-header end// -->
         <div class="card-body">
             {% for p in all_products %}
-            <article class="itemlist">
+            <article class="itemlist" data-category="{{ p.category.title }}" data-status="{{ p.product_status }}">
                 <div class="row align-items-center">
                     <div class="col col-check flex-grow-0">
                         <div class="form-check">
@@ -63,11 +62,8 @@
                             </div>
                         </a>
                     </div>
-                    <div class="col-lg-2 col-sm-2 col-4 col-price"><span>${{p.price}}</span></div>
+                    <div class="col-lg-2 col-sm-2 col-4 col-price"><span>TJS {{p.price}}</span></div>
                     <div class="col-lg-2 col-sm-2 col-4 col-status">
-                        
-                       
-                            
                         <span class="badge  alert-dark">{{p.product_status|title}}</span>
                     </div>
                     <div class="col-lg-1 col-sm-2 col-4 col-date">
@@ -101,4 +97,35 @@
         </nav>
     </div>
 </section>
+<script>
+    // Function to filter products based on category and status
+    function filterProducts() {
+        var selectedCategory = document.getElementById('categorySelect').value;
+        var selectedStatus = document.getElementById('statusSelect').value;
+
+        // Loop through each product item
+        var products = document.getElementsByClassName('itemlist');
+        for (var i = 0; i < products.length; i++) {
+            var product = products[i];
+            var category = product.getAttribute('data-category');
+            var status = product.getAttribute('data-status');
+
+            // Check if the product matches the selected category and status
+            if ((selectedCategory == 'All category' || selectedCategory == category) &&
+                (selectedStatus == 'Show all' || selectedStatus == status)) {
+                product.style.display = 'block';
+            } else {
+                product.style.display = 'none';
+            }
+        }
+    }
+
+    // Call the filterProducts function when the category or status dropdowns change
+    document.getElementById('categorySelect').addEventListener('change', filterProducts);
+    document.getElementById('statusSelect').addEventListener('change', filterProducts);
+
+    // Initial filtering when the page loads
+    window.onload = filterProducts;
+</script>
+
 {% endblock content %}

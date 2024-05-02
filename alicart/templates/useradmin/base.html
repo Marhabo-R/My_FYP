@@ -12,14 +12,34 @@
     <meta property="og:type" content="" />
     <meta property="og:url" content="" />
     <meta property="og:image" content="" />
-    <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="assets2/imgs/theme/favicon.svg" />
+    <!-- LOGo -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets2/imgs/theme/LOGO.png" />
     <!-- Template CSS -->
     <link href="{% static 'assets2/css/main.css' %}" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-</head>
+    <style>
+        .dropdown-toggle .d-flex {
+            justify-content: center;
+            align-items: center;
+        }
 
+        .dropdown-toggle .fw-bold {
+            font-weight: bold;
+        }
+        .dropdown-toggle {
+            position: relative; /* Add relative positioning to the parent */
+        }
+
+        .dropdown-toggle:after {
+            position: absolute;
+            top: 50%;
+            color: #adb5bd;
+            right: -5px; /* Adjust the positioning to move the arrow to the right of the username */
+            transform: translateY(-50%); /* Center the arrow vertically */
+        }
+    </style>
+</head>
 <body>
     <div class="screen-overlay"></div>
     <aside class="navbar-aside" id="offcanvas_aside">
@@ -33,103 +53,23 @@
         </div>
         <nav>
             <ul class="menu-aside">
-                <li class="menu-item active">
+                <li class="menu-item {% if request.resolver_match.view_name == 'useradmin:dashboard' %}active{% endif %}">
                     <a class="menu-link" href="/useradmin">
-                            <i class="icon material-icons md-home"></i>
-                            <span class="text">Dashboard</span>
-                        </a>
+                        <i class="icon material-icons md-home"></i>
+                        <span class="text">Dashboard</span>
+                    </a>
                 </li>
-                <li class="menu-item has-submenu">
+                <li class="menu-item has-submenu {% if request.resolver_match.view_name == 'useradmin:dashboard-products' %}active{% endif %}">
                     <a class="menu-link" href="{% url 'useradmin:dashboard-products' %}">
                         <i class="icon material-icons md-shopping_bag"></i>
-
-                            <span class="text">Products</span>
-                        </a>
-                    
+                        <span class="text">Products</span>
+                    </a>
                 </li>
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-orders-1.html">
-                            <i class="icon material-icons md-shopping_cart"></i>
-                            <span class="text">Orders</span>
-                        </a>
-                    <div class="submenu">
-                        <a href="page-orders-1.html">Order list 1</a>
-                        <a href="page-orders-2.html">Order list 2</a>
-                        <a href="page-orders-detail.html">Order detail</a>
-                    </div>
-                </li>
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-sellers-cards.html">
-                            <i class="icon material-icons md-store"></i>
-                            <span class="text">Sellers</span>
-                        </a>
-                    <div class="submenu">
-                        <a href="page-sellers-cards.html">Sellers cards</a>
-                        <a href="page-sellers-list.html">Sellers list</a>
-                        <a href="page-seller-detail.html">Seller profile</a>
-                    </div>
-                </li>
-                <li class="menu-item has-submenu">
+                <li class="menu-item has-submenu {% if request.resolver_match.view_name == 'useradmin:dashboard-add-products' %}active{% endif %}">
                     <a class="menu-link" href="{% url 'useradmin:dashboard-add-products' %}">
-                            <i class="icon material-icons md-add_box"></i>
-                            <span class="text">Add product</span>
-                        </a>
-                    
-                </li>
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-transactions-1.html">
-                            <i class="icon material-icons md-monetization_on"></i>
-                            <span class="text">Transactions</span>
-                        </a>
-                    <div class="submenu">
-                        <a href="page-transactions-1.html">Transaction 1</a>
-                        <a href="page-transactions-2.html">Transaction 2</a>
-                    </div>
-                </li>
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="#">
-                            <i class="icon material-icons md-person"></i>
-                            <span class="text">Account</span>
-                        </a>
-                    <div class="submenu">
-                        <a href="page-account-login.html">User login</a>
-                        <a href="page-account-register.html">User registration</a>
-                        <a href="page-error-404.html">Error 404</a>
-                    </div>
-                </li>
-                <li class="menu-item">
-                    <a class="menu-link" href="page-reviews.html">
-                            <i class="icon material-icons md-comment"></i>
-                            <span class="text">Reviews</span>
-                        </a>
-                </li>
-                <li class="menu-item">
-                    <a class="menu-link" href="page-brands.html"> <i class="icon material-icons md-stars"></i> <span class="text">Brands</span> </a>
-                </li>
-                <li class="menu-item">
-                    <a class="menu-link" disabled href="#">
-                            <i class="icon material-icons md-pie_chart"></i>
-                            <span class="text">Statistics</span>
-                        </a>
-                </li>
-            </ul>
-            <hr />
-            <ul class="menu-aside">
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="#">
-                            <i class="icon material-icons md-settings"></i>
-                            <span class="text">Settings</span>
-                        </a>
-                    <div class="submenu">
-                        <a href="page-settings-1.html">Setting sample 1</a>
-                        <a href="page-settings-2.html">Setting sample 2</a>
-                    </div>
-                </li>
-                <li class="menu-item">
-                    <a class="menu-link" href="page-blank.html">
-                            <i class="icon material-icons md-local_offer"></i>
-                            <span class="text"> Starter page </span>
-                        </a>
+                        <i class="icon material-icons md-add_box"></i>
+                        <span class="text">Add product</span>
+                    </a>
                 </li>
             </ul>
             <br />
@@ -171,20 +111,29 @@
                         <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
                             <a class="dropdown-item text-brand" href="#"><img src="{% static 'assets2/imgs/theme/flag-us.png' %}" alt="English" />English</a>
-                            <a class="dropdown-item" href="#"><img src="{% static 'assets2/imgs/theme/flag-ru.png' %}" alt="Français" />Russian </a>
-                            <a class="dropdown-item" href="#"><img src="{% static 'assets2/imgs/theme/flag-tj .png' %}" alt="Français" />Tajik</a>
+                            <a class="dropdown-item" href="#"><img src="{% static 'assets2/imgs/theme/flag-ru.png' %}" alt="Russian" />Russian </a>
+                            <a class="dropdown-item" href="#"><img src="{% static 'assets2/imgs/theme/flag-tj .png' %}" alt="Tajik" />Tajik</a>
                         </div>
                     </li>
                     <li class="dropdown nav-item">
-                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="{% static 'assets2/imgs/people/avatar-5.png' %}" alt="User" /></a>
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false">
+                            {% if request.user.profile and request.user.profile.full_name %}
+                                <div class="d-flex">
+                                    <img class="img-xs rounded-circle me-2" src="{{ request.user.profile.image.url }}" alt="User" />
+                                    <span class="fw-bold">{{ request.user.profile.full_name }}</span>
+                                </div>
+                            {% else %}
+                                <div class="d-flex align-items-center">
+                                    <img class="img-xs rounded-circle me-2" src="{% static 'assets2/imgs/people/avatar-5.png' %}" alt="User" />
+                                    <span class="fw-bold">{{ request.user.username }}</span>
+                                </div>
+                            {% endif %}
+                        </a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
+                            <a class="dropdown-item" href="{% url 'core:index' %}"><i class="material-icons md-receipt"></i>Go to the shop</a>
+                            <a class="dropdown-item" href="{% url 'core:contact' %}"><i class="material-icons md-help_outline"></i>Contact Us</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                            <a class="dropdown-item text-danger" href="{% url 'userauths:sign-out' %}"><i class="material-icons md-exit_to_app"></i>Logout</a>
                         </div>
                     </li>
                 </ul>
@@ -204,7 +153,7 @@
                     <script>
                         document.write(new Date().getFullYear());
                     </script>
-                    &copy; AliCart - HTML Ecommerce Template .
+                    &copy; AliCart - Your Best Choice.
                 </div>
                 <div class="col-sm-6">
                     <div class="text-sm-end">All rights reserved</div>

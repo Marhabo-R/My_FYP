@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html class="no-js" lang="en">
 
@@ -26,7 +25,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-
+    <style>
+    .suggestion-container {
+        display: none;
+    }
+</style>
 </head>
 
 <body>
@@ -126,7 +129,7 @@
         <div class="mobile-promotion">
             <span>Grand opening, <strong>up to 15%</strong> off all items. Only <strong>3 days</strong> left</span>
         </div>
-        
+
         <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
             <div class="container">
                 <div class="header-wrap">
@@ -135,24 +138,22 @@
                     </div>
                     <div class="header-right">
                         <div class="search-style-2">
-                            <form action="{% url 'core:search' %}" method="GET">
-                                <select class="select-active">
+                            <form id="large-screen-search-form" action="{% url 'core:search' %}" method="GET">
+                                <select class="select-active" id="category-select">
                                     <option>All Categories</option>
                                     <option>Grocery Essentials</option>
                                     <option>Cloths & Fashion</option>
                                     <option>Vegetables & Fruit</option>
-                                    <option>Packaged fast food</option>
-                                    <option>Everyday Iteams</option>
+                                    <option>Everyday Items</option>
                                     <option>Skin Solutions</option>
                                     <option>Gadget Zone</option>
                                     <option>Aroma Boutique</option>
-                                    <option>Health & Wellness</option>
                                     <option>Outdoor & Leisure</option>
                                 </select>
-                                <input type="text" placeholder="Search for items..." name="q" />
-                                <button class="material-symbols-outlined" type="submit"><span class="material-symbols-outlined">search</span></button>
-
+                                <input type="text" placeholder="Search for items..." id="large-screen-search-input" name="q" />
+                                <button class="material-symbols-outlined" type="submit"><span class="material-symbols-outlined">Search</span></button>
                             </form>
+                            <div id="large-screen-suggestions" style="height:auto; background:aliceblue; margin-left: 20%; width: max-content;" class="form-control suggestion-container"></div>
                         </div>
                         <div class="header-action-right">
                             <div class="header-action-2">
@@ -212,12 +213,10 @@
                                     <a href="{% url 'core:dashboard' %}"><span class="lable ml-0">Account</span></a>
                                     <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
                                         <ul>
-                                            <li><a href="{% url 'core:dashboard' %}"><i class="fi fi-rs-user mr-10"></i>My Account</a></li>
                                             <li><a href="{% url 'useradmin:dashboard' %}"><i class="fi fi-rs-user mr-10"></i>Admin Dashboard</a></li>
-                                            <li><a href="page-account.html"><i class="fi fi-rs-location-alt mr-10"></i>Order Tracking</a></li>
                                             <!-- <li><a href="page-account.html"><i class="fi fi-rs-label mr-10"></i>My Voucher</a></li> -->
                                             <li><a href="{% url 'core:wishlist' %}"><i class="fi fi-rs-heart mr-10"></i>My Wishlist</a></li>
-                                            <li><a href="{% url 'core:dashboard' %}"><i class="fi fi-rs-settings-sliders mr-10"></i>Setting</a></li>
+                                            <li><a href="{% url 'core:dashboard' %}"><i class="fi fi-rs-user mr-10"></i>My Account</a></li>
                                             {% if request.user.is_authenticated %}
                                             <li><a href="{% url 'userauths:sign-out' %}"><i class="fi fi-rs-sign-out mr-10"></i>Sign out</a></li>
                                             {% else %}
@@ -235,8 +234,9 @@
         <div class="header-bottom header-bottom-bg-color sticky-bar">
             <div class="container">
                 <div class="header-wrap header-space-between position-relative">
-                    <div class="logo logo-width-1 d-block d-lg-none">
-                        <a href="{% url 'core:index' %}"><img src="{% static 'assets/imgs/theme/logo.png' %}" alt="logo" /></a>
+                    <!-- mobile logo -->
+                    <div class="logo logo-width-1 d-block d-lg-none"> 
+                        <a href="{% url 'core:index' %}"><img src="{% static 'assets/imgs/theme/logo.png' %}" alt="logo" style="margin-left: -70px;" /></a>
                     </div>
                     <div class="header-nav d-none d-lg-flex">
                         <div class="main-categori-wrap d-none d-lg-block">
@@ -264,12 +264,7 @@
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block font-heading">
                             <nav>
                                 <ul>
-                                    <li class="hot-deals"><img src="{% static 'assets/imgs/theme/icons/icon-hot.svg' %}" alt="hot deals" /><a href="{% url 'core:product-list' %}">Deals</a></li>
-                                    <li>
-                                        <a class="active" href="{% url 'core:index' %}">Home</a>
-
-                                    </li>
-
+                                    <li class="hot-deals"><img src="{% static 'assets/imgs/theme/icons/icon-hot.svg' %}" alt="hot deals" /><a href="{% url 'core:index' %}">Home</a></li>
                                     <li>
                                         <a href="#">Category <i class="fi-rs-angle-down"></i></a>
                                         <ul class="sub-menu">
@@ -291,31 +286,31 @@
 
                                     </li>
                                     <li>
-                                        <a href="#">Pages <i class="fi-rs-angle-down"></i></a>
+                                        <a href="{% url 'core:contact' %}">Contact</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'core:contact' %}">User Guide</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">More <i class="fi-rs-angle-down"></i></a>
                                         <ul class="sub-menu">
                                             <li><a href="{% url 'core:about_us' %}">About Us</a></li>
                                             <li><a href="{% url 'core:dashboard' %}">My Dashboard</a></li>
                                             <li><a href="{% url 'core:privacy_policy' %}">Privacy Policy</a></li>
                                         </ul>
                                     </li>
-                                    <li>
-                                        <a href="{% url 'core:contact' %}">Contact</a>
-                                    </li>
                                 </ul>
                             </nav>
                         </div>
+
                     </div>
-                    
+
                     <div class="hotline d-none d-lg-flex">
                         <img src="{% static 'assets/imgs/theme/icons/icon-headphone.svg' %}" alt="hotline" />
                         <p>50-111-11-11<span>24/7 Support Center</span></p>
-                        
+
                     </div>
-                    <div class="mobile-social-icon">
-                        <a href="#"><img src="{% static 'assets/imgs/theme/icons/whatsapp-icon.svg' %}" alt="whatsapp-icon" /></a>
-                        <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-facebook-white.svg' %}" alt="facebook -Icon" /></a>
-                        <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-instagram-white.svg' %}" alt="Instagram - icon" /></a>
-                    </div>
+                    
                     <div class="header-action-icon-2 d-block d-lg-none">
                         <div class="burger-icon burger-icon-white">
                             <span class="burger-icon-top"></span>
@@ -349,6 +344,26 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="header-action-icon-2">
+                                    <a href="{% url 'core:dashboard' %}">
+                                        <img class="svgInject" alt="AliCart" src="{% static 'assets/imgs/theme/icons/icon-user.svg' %}" />
+                                    </a>
+                                    <a href="{% url 'core:dashboard' %}"><span class="lable ml-0">Account</span></a>
+                                    <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
+                                        <ul>
+                                            <li><a href="{% url 'useradmin:dashboard' %}"><i class="fi fi-rs-user mr-10"></i>Partner with Us</a></li>
+                                            <!-- <li><a href="page-account.html"><i class="fi fi-rs-label mr-10"></i>My Voucher</a></li> -->
+                                            <li><a href="{% url 'core:wishlist' %}"><i class="fi fi-rs-heart mr-10"></i>My Wishlist</a></li>
+                                            <li><a href="{% url 'core:dashboard' %}"><i class="fi fi-rs-user mr-10"></i>My Account</a></li>
+                                            {% if request.user.is_authenticated %}
+                                            <li><a href="{% url 'userauths:sign-out' %}"><i class="fi fi-rs-sign-out mr-10"></i>Sign out</a></li>
+                                            {% else %}
+                                            <li><a href="{% url 'userauths:sign-in' %}"><i class="fi fi-rs-sign-in mr-10"></i>Sign In</a></li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </div>
+    
                             </div>
                         </div>
                     </div>
@@ -383,151 +398,59 @@
             </div>
             <div class="mobile-header-content-area">
                 <div class="mobile-search search-style-3 mobile-header-border">
-                    <form action="#">
-                        <input type="text" placeholder="Search for items…" />
+                    <form id="mobile-search-form" action="{% url 'core:search' %}" method="GET">
+                        <input type="text" placeholder="Search for items…" id="mobile-search-input" name="q" />
                         <button type="submit"><i class="fi-rs-search"></i></button>
                     </form>
+                    <div id="mobile-suggestions" style="height:auto; background:aliceblue; width: max-content;" class="form-control suggestion-container"></div>
                 </div>
                 <div class="mobile-menu-wrap mobile-header-border">
-                    <!-- mobile menu start -->
                     <nav>
                         <ul class="mobile-menu font-heading">
                             <li class="menu-item-has-children">
                                 <a href="/">Home</a>
-                                
+
                             </li>
                             <li class="menu-item-has-children">
-                                <a href="#">shop</a>
+                                <a href="#">Category</a>
                                 <ul class="dropdown">
-                                    <li><a href="#">Shop Grid – Right Sidebar</a></li>
-                                    <li><a href="shop-grid-left.html">Shop Grid – Left Sidebar</a></li>
-                                    <li><a href="shop-list-right.html">Shop List – Right Sidebar</a></li>
-                                    <li><a href="shop-list-left.html">Shop List – Left Sidebar</a></li>
-                                    <li><a href="shop-fullwidth.html">Shop - Wide</a></li>
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Single Product</a>
-                                        <ul class="dropdown">
-                                            <li><a href="#">Product – Right Sidebar</a></li>
-                                            <li><a href="shop-product-left.html">Product – Left Sidebar</a></li>
-                                            <li><a href="shop-product-full.html">Product – No sidebar</a></li>
-                                            <li><a href="shop-product-vendor.html">Product – Vendor Infor</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="shop-filter.html">Shop – Filter</a></li>
-                                    <li><a href="shop-wishlist.html">Shop – Wishlist</a></li>
-                                    <li><a href="shop-cart.html">Shop – Cart</a></li>
-                                    <li><a href="shop-checkout.html">Shop – Checkout</a></li>
-                                    <li><a href="shop-compare.html">Shop – Compare</a></li>
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Shop Invoice</a>
-                                        <ul class="dropdown">
-                                            <li><a href="shop-invoice-1.html">Shop Invoice 1</a></li>
-                                            <li><a href="shop-invoice-2.html">Shop Invoice 2</a></li>
-                                            <li><a href="shop-invoice-3.html">Shop Invoice 3</a></li>
-                                            <li><a href="shop-invoice-4.html">Shop Invoice 4</a></li>
-                                            <li><a href="shop-invoice-5.html">Shop Invoice 5</a></li>
-                                            <li><a href="shop-invoice-6.html">Shop Invoice 6</a></li>
-                                        </ul>
-                                    </li>
+                                     {% for c in categories %}
+                                            <li><a href="{% url 'core:category-product-list' c.cid %}">{{c.title}}</a></li>
+                                            {% endfor %}
+                                            <hr>
+                                            <li><a href="{% url 'core:category-list' %}">All Categories</a></li>
                                 </ul>
                             </li>
                             <li class="menu-item-has-children">
-                                <a href="#">Vendors</a>
-                                <ul class="dropdown">
-                                    <li><a href="vendors-grid.html">Vendors Grid</a></li>
-                                    <li><a href="vendors-list.html">Vendors List</a></li>
-                                    <li><a href="vendor-details-1.html">Vendor Details 01</a></li>
-                                    <li><a href="vendor-details-2.html">Vendor Details 02</a></li>
-                                    <li><a href="vendor-dashboard.html">Vendor Dashboard</a></li>
-                                    <li><a href="vendor-guide.html">Vendor Guide</a></li>
-                                </ul>
+                                <a href="{% url 'core:vendor-list' %}">Vendors </a>
                             </li>
-                            <li class="menu-item-has-children">
-                                <a href="#">Mega menu</a>
-                                <ul class="dropdown">
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Women's Fashion</a>
-                                        <ul class="dropdown">
-                                            <li><a href="#">Dresses</a></li>
-                                            <li><a href="#">Blouses & Shirts</a></li>
-                                            <li><a href="#">Hoodies & Sweatshirts</a></li>
-                                            <li><a href="#">Women's Sets</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Men's Fashion</a>
-                                        <ul class="dropdown">
-                                            <li><a href="#">Jackets</a></li>
-                                            <li><a href="#">Casual Faux Leather</a></li>
-                                            <li><a href="#">Genuine Leather</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Technology</a>
-                                        <ul class="dropdown">
-                                            <li><a href="#">Gaming Laptops</a></li>
-                                            <li><a href="#">Ultraslim Laptops</a></li>
-                                            <li><a href="#">Tablets</a></li>
-                                            <li><a href="#">Laptop Accessories</a></li>
-                                            <li><a href="#">Tablet Accessories</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
+                            <li>
+                                <a href="{% url 'core:contact' %}">Contact</a>
                             </li>
-                            <li class="menu-item-has-children">
-                                <a href="blog-category-fullwidth.html">Blog</a>
-                                <ul class="dropdown">
-                                    <li><a href="blog-category-grid.html">Blog Category Grid</a></li>
-                                    <li><a href="blog-category-list.html">Blog Category List</a></li>
-                                    <li><a href="blog-category-big.html">Blog Category Big</a></li>
-                                    <li><a href="blog-category-fullwidth.html">Blog Category Wide</a></li>
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Single Product Layout</a>
-                                        <ul class="dropdown">
-                                            <li><a href="blog-post-left.html">Left Sidebar</a></li>
-                                            <li><a href="blog-post-right.html">Right Sidebar</a></li>
-                                            <li><a href="blog-post-fullwidth.html">No Sidebar</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
+                            <li>
+                                <a href="{% url 'core:contact' %}">User Guide</a>
+                            </li>                
                             <li class="menu-item-has-children">
                                 <a href="#">Pages</a>
                                 <ul class="dropdown">
-                                    <li><a href="page-about.html">About Us</a></li>
-                                    <li><a href="page-contact.html">Contact</a></li>
-                                    <li><a href="page-account.html">My Account</a></li>
-                                    <li><a href="page-login.html">Login</a></li>
-                                    <li><a href="page-register.html">Register</a></li>
-                                    <li><a href="page-forgot-password.html">Forgot password</a></li>
-                                    <li><a href="page-reset-password.html">Reset password</a></li>
-                                    <li><a href="page-purchase-guide.html">Purchase Guide</a></li>
-                                    <li><a href="page-privacy-policy.html">Privacy Policy</a></li>
-                                    <li><a href="page-terms.html">Terms of Service</a></li>
-                                    <li><a href="page-404.html">404 Page</a></li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children">
-                                <a href="#">Language</a>
-                                <ul class="dropdown">
-                                    <li><a href="#">English</a></li>
-                                    <li><a href="#">Russian </a></li>
-                                    <li><a href="#">Tajik</a></li>
+                                    <li><a href="{% url 'core:about_us' %}">About Us</a></li>
+                                    <li><a href="{% url 'core:dashboard' %}">My Dashboard</a></li>
+                                    <li><a href="{% url 'core:privacy_policy' %}">Privacy Policy</a></li>
                                 </ul>
                             </li>
                         </ul>
                     </nav>
-                    <!-- mobile menu end -->
                 </div>
                 <div class="mobile-header-info-wrap">
                     <div class="single-mobile-header-info">
-                        <a href="page-contact.html"><i class="fi-rs-marker"></i> Our location </a>
+                        <a href="page-contact.html"><i class="fi-rs-marker"></i> Tajikistan </a>
+                    </div>
+                    <div class="single-mobile-header-info" style="display: flex; align-items: center;">
+                        <a href="{% url 'userauths:sign-in' %}" style="margin-right: 10px;"><i class="fi-rs-user"></i>Log In</a> / 
+                        <a href="{% url 'userauths:sign-up' %}"> Sign Up</a>
                     </div>
                     <div class="single-mobile-header-info">
-                        <a href="page-login.html"><i class="fi-rs-user"></i>Log In / Sign Up </a>
-                    </div>
-                    <div class="single-mobile-header-info">
-                        <a href="#"><i class="fi-rs-headphones"></i>(+01) - 2345 - 6789 </a>
+                        <a href="#"><i class="fi-rs-headphones"></i>(+992) 111-11-11 </a>
                     </div>
                 </div>
                 <div class="mobile-social-icon mb-50">
@@ -588,9 +511,9 @@
                         <p>50-111-11-11<span>24/7 Support Center</span></p>
                     </div>
                     <div class="hotline d-lg-inline-flex">
-                        <img src="{% static 'assets/imgs/theme/icons/icon-location.svg' %}" alt="" /><strong>Address: </strong> <span>ITTIHOD Shop, Khorog, GBAO, Tajikistan</span></li>
-                        
-                    </div> 
+                        <img src="{% static 'assets/imgs/theme/icons/icon-location.svg' %}" alt="" /><strong>Address: </strong> <span>ITTIHOD Shop, Khorog, GBAO, Tajikistan</span>
+
+                    </div>
                 </div>
                 <div class="col-xl-2 col-lg-6 col-md-6 text-end d-none d-md-block" style="margin-top: 35px;">
                     <div class="mobile-social-icon">
@@ -642,5 +565,54 @@
     <script src="{% static 'assets/js/shop.js' %}"></script>
     <script src="{% static 'assets/js/function.js' %}"></script>
 </body>
+<script>
+    $(document).ready(function() {
+        function handleSearchSuggestions(inputFieldId, suggestionsDivId) {
+            $('#' + inputFieldId).on('input', function() {
+                var query = $(this).val();
+                if (query.length > 0) {
+                    $.ajax({
+                        type: 'GET',
+                        url: '/search_characters/',
+                        data: { 'q': query },
+                        success: function(data) {
+                            displaySuggestions(data, suggestionsDivId);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(error);
+                        }
+                    });
+                } else {
+                    $('#' + suggestionsDivId).empty().hide();
+                }
+            });
 
+            function displaySuggestions(suggestions, suggestionsDivId) {
+                var suggestionsDiv = $('#' + suggestionsDivId);
+                suggestionsDiv.empty();
+                if (suggestions.length > 0) {
+                    var list = $('<ul>');
+                    suggestions.forEach(function(suggestion) {
+                        list.append('<li class="suggestion-item">' + suggestion + '</li>');
+                    });
+                    suggestionsDiv.append(list).show();
+                    $('.suggestion-item').mouseenter(function() {
+                        $(this).css('cursor', 'pointer');
+                    }).mouseleave(function() {
+                        $(this).css('cursor', 'default');
+                    }).click(function() {
+                        var suggestionText = $(this).text();
+                        $('#' + inputFieldId).val(suggestionText).focus();
+                        suggestionsDiv.empty().hide();
+                    });
+                } else {
+                    suggestionsDiv.hide();
+                }
+            }
+        }
+
+        handleSearchSuggestions('mobile-search-input', 'mobile-suggestions');
+        handleSearchSuggestions('large-screen-search-input', 'large-screen-suggestions');
+    });
+</script>
 </html>

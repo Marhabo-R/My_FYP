@@ -19,7 +19,7 @@
         border-radius: 3px;
     }
      
-    #id_category {
+    #id_category, #id_vendor {
         position: relative;
         display: block;
         width: 15em;
@@ -87,7 +87,7 @@
                                         <div class="col-lg-4">
                                             <div class="mb-4">
                                                 <label class="form-label">Old price</label>
-                                        {{form.old_price}}
+                                                {{form.old_price}}
 
                                                 <!-- <input placeholder="$" type="text" class="form-control" /> -->
                                             </div>
@@ -95,8 +95,7 @@
                                         <div class="col-lg-4">
                                             <label class="form-label">Currency</label>
                                             <select class="form-select">
-                                                <option>USD</option>
-                                               
+                                                <option>TJS</option>
                                             </select>
                                         </div>
                                     </div>
@@ -125,8 +124,8 @@
 
                                     <div class="mb-4">
                                         <label class="form-label">Tags</label>
-                                        {{form.tags}}
-                                        <small class="text-muted">Seperate tag using comma</small>
+                                        <input type="text" name="tags" value="{% for tag in form.tags.value %}{{ tag }}, {% endfor %}" placeholder="Tags" class="form-control" required="" id="id_tags">
+                                        <small class="text-muted">Seperate tags using commas</small>
                                         <!-- <input type="text" placeholder="%" class="form-control" id="product_name" /> -->
                                     </div>
 
@@ -174,7 +173,12 @@
                                         <label class="form-label">Category</label>
                                         {{form.category}}
                                     </div>
-                                    
+                                </div>
+                                <div class="row gx-2">
+                                    <div class="col-sm-6 mb-3">
+                                        <label class="form-label">Vendor</label>
+                                        {{form.vendor}}
+                                    </div>
                                 </div>
                                 <!-- row.// -->
                             </div>
@@ -182,7 +186,7 @@
                             
                         </div>
                         <!-- card end// -->
-                        <button class="btn mt-3 btn-md rounded font-sm hover-up" type="submit">Create Product</button>
+                        <button class="btn mt-3 btn-md rounded font-sm hover-up" type="submit">Update Product</button>
                     </div>
                 </div>
                 </form>
