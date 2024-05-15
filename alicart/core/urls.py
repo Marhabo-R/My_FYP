@@ -88,6 +88,8 @@ urlpatterns = [
     path("privacy_policy/", privacy_policy, name="privacy_policy"),
     path("terms_of_service/", terms_of_service, name="terms_of_service"),
 
+    
+
     # Redirecting to sign-in page
     path("sign-in/", sign_in, name="sign_in"),
 
