@@ -13,7 +13,9 @@
     <meta property="og:url" content="" />
     <meta property="og:image" content="" />
     <!-- LOGo -->
-    <link rel="shortcut icon" type="image/x-icon" href="assets2/imgs/theme/LOGO.png" />
+    
+
+    <link rel="shortcut icon" type="image/x-icon" href="assets2/imgs/theme/logo.png" />
     <!-- Template CSS -->
     <link href="{% static 'assets2/css/main.css' %}" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -45,7 +47,7 @@
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
             <a href="/" class="brand-wrap">
-                    <img src="{% static 'assets2/imgs/theme/logo.png' %}" class="logo" alt="AliCart Dashboard" />
+                <img src="{% static 'assets/imgs/theme/logo.png' %}" alt="AliCart Dashboard" />
                 </a>
             <div>
                 <button class="btn btn-icon btn-aside-minimize"><i class="text-muted material-icons md-menu_open"></i></button>
@@ -79,41 +81,26 @@
     <main class="main-wrap">
         <header class="main-header navbar">
             <div class="col-search">
-                <form class="searchform">
-                    <div class="input-group">
-                        <input list="search_terms" type="text" class="form-control" placeholder="Search term" />
-                        <button class="btn btn-light bg" type="button"><i class="material-icons md-search"></i></button>
-                    </div>
-                    <datalist id="search_terms">
-                            <option value="Products"></option>
-                            <option value="New orders"></option>
-                            <option value="Apple iphone"></option>
-                            <option value="Ahmed Hassan"></option>
-                        </datalist>
-                </form>
+                
             </div>
             <div class="col-nav">
-                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"><i class="material-icons md-apps"></i></button>
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#"><i class=""></i></button>
                 <ul class="nav">
-                    <li class="nav-item">
-                        <a class="nav-link btn-icon" href="#">
-                                <i class="material-icons md-notifications animation-shake"></i>
-                                <span class="badge rounded-pill">3</span>
-                            </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
-                    </li>
                     <li class="dropdown nav-item">
                         <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
-                            <a class="dropdown-item text-brand" href="#"><img src="{% static 'assets2/imgs/theme/flag-us.png' %}" alt="English" />English</a>
+                            <a class="dropdown-item text-brand" href="{% url 'useradmin:dashboard' %}"><img src="{% static 'assets2/imgs/theme/flag-us.png' %}" alt="English" />English</a>
                             <a class="dropdown-item" href="#"><img src="{% static 'assets2/imgs/theme/flag-ru.png' %}" alt="Russian" />Russian </a>
-                            <a class="dropdown-item" href="#"><img src="{% static 'assets2/imgs/theme/flag-tj .png' %}" alt="Tajik" />Tajik</a>
                         </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link btn-icon dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="material-icons md-shopping_cart"></i>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{% url 'useradmin:dashboard-products' %}">All Products</a></li>
+                            <li><a class="dropdown-item" href="{% url 'useradmin:dashboard-add-products' %}">Add Products</a></li>
+                        </ul>
                     </li>
                     <li class="dropdown nav-item">
                         <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false">
@@ -131,6 +118,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
                             <a class="dropdown-item" href="{% url 'core:index' %}"><i class="material-icons md-receipt"></i>Go to the shop</a>
+                            <a class="dropdown-item" href="{% url 'core:dashboard' %}"><i class="material-icons md-person"></i>My Account</a>
                             <a class="dropdown-item" href="{% url 'core:contact' %}"><i class="material-icons md-help_outline"></i>Contact Us</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item text-danger" href="{% url 'userauths:sign-out' %}"><i class="material-icons md-exit_to_app"></i>Logout</a>

@@ -40,7 +40,7 @@
         <div class="page-header breadcrumb-wrap">
             <div class="container">
                 <div class="breadcrumb">
-                    <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                    <a href="{% url 'core:index' %}" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
                     <span></span> Shop <span></span> Fillter
                 </div>
             </div>
@@ -57,17 +57,16 @@
                     <div class="shop-product-fillter-header">
                         <div class="row">
                             <div class="col-xl-3 col-lg-6 col-md-6 mb-lg-0 mb-md-2 mb-sm-2">
-                                <div class="card">
-                                    <h5 class="mb-30">By Categories</h5>
-                                    <div class="categories-dropdown-wrap font-heading">
+                                div class="sidebar-widget widget-category-2 mb-30">
+                                        <h5 class="section-title style-1 mb-30">Category</h5>
                                         <ul>
+                
                                             {% for c in categories %}
                                             <li>
-                                                <input data-filter="category" class="form-check-input filter-checkbox" type="checkbox" name="checkbox" id="exampleCheckbox2" value="{{ c.id }}" />
-                                                &nbsp;&nbsp;
-                                                <a href="{% url 'core:category-product-list' c.cid %}"> <img src="{{c.image.url}}" alt="" />{{ c.title }}</a>
+                                                <a href="{% url 'core:category-product-list' c.cid %}"> <img src="{{ c.image.url }}" alt="" style="width: 30px; height: 30px; object-fit: cover; border-radius: 10px;" />{{c.title}}</a><span class="count">{{c.product_count}}</span>
                                             </li>
                                             {% endfor %}
+                
                                         </ul>
                                     </div>
                                 </div>
@@ -118,46 +117,6 @@
                         <div class="totall-product">
                             <p>We found <strong class="text-brand">{{products.count}}</strong> items for you!</p>
                         </div>
-                        <div class="sort-by-product-area">
-                            <div class="sort-by-cover mr-10">
-                                <div class="sort-by-product-wrap">
-                                    <div class="sort-by">
-                                        <span><i class="fi-rs-apps"></i>Show:</span>
-                                    </div>
-                                    <div class="sort-by-dropdown-wrap">
-                                        <span> 50 <i class="fi-rs-angle-small-down"></i></span>
-                                    </div>
-                                </div>
-                                <div class="sort-by-dropdown">
-                                    <ul>
-                                        <li><a class="active" href="#">50</a></li>
-                                        <li><a href="#">100</a></li>
-                                        <li><a href="#">150</a></li>
-                                        <li><a href="#">200</a></li>
-                                        <li><a href="#">All</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="sort-by-cover">
-                                <div class="sort-by-product-wrap">
-                                    <div class="sort-by">
-                                        <span><i class="fi-rs-apps-sort"></i>Sort by:</span>
-                                    </div>
-                                    <div class="sort-by-dropdown-wrap">
-                                        <span> Featured <i class="fi-rs-angle-small-down"></i></span>
-                                    </div>
-                                </div>
-                                <div class="sort-by-dropdown">
-                                    <ul>
-                                        <li><a class="active" href="#">Featured</a></li>
-                                        <li><a href="#">Price: Low to High</a></li>
-                                        <li><a href="#">Price: High to Low</a></li>
-                                        <li><a href="#">Release Date</a></li>
-                                        <li><a href="#">Avg. Rating</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div class="row product-grid" id="filtered-product">
 
@@ -173,13 +132,21 @@
                                         </a>
                                     </div>
                                     <div class="product-action-1">
-                                        <a aria-label="Add To Wishlist"  class="action-btn add-to-wishlist" data-product-item="{{p.id}}"><i class="fi-rs-heart"></i></a>
+                                        <a aria-label="Add To Wishlist" class="action-btn add-to-wishlist" data-product-item="{{p.id}}">
+                                            {% if p.id in wishlist_items %}
+                                            <i class="fas fa-heart text-danger"></i>
+                                            {% else %}
+                                            <i class="fi-rs-heart"></i>
+                                            {% endif %}
+                                        </a>
                                         <!-- <a aria-label="Compare" class="action-btn" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a> -->
-                                        <a href="{% url 'core:product-detail' p.pid %}" class="action-btn"><i class="fi-rs-eye"></i></a>
+                                        <a aria-label="View Details" href="{% url 'core:product-detail' p.pid %}" class="action-btn"><i class="fi-rs-eye"></i></a>
                                     </div>
+                                    {% if p.old_price %}
                                     <div class="product-badges product-badges-position product-badges-mrg">
                                         <span class="hot">-{{p.get_precentage|floatformat:0}}%</span>
                                     </div>
+                                    {% endif %}
                                 </div>
                                 <div class="product-content-wrap">
                                     <div class="product-category">
@@ -189,7 +156,6 @@
                                     <div class="product-rate-cover">
                                         <i class="fas fa-star text-warning"></i>
                                         <span class="font-small ml-5 text-muted"> ({{ p.reviews.all.count }})</span>
-
                                     </div>
                                     <div>
                                         <span class="font-small text-muted">By <a href="#">{{p.vendor.title}}</a></span>
@@ -197,7 +163,9 @@
                                     <div class="product-card-bottom">
                                         <div class="product-price">
                                             <span>TJS</span> <span class="current-product-price-{{ p.id }}">{{p.price}}</span>
-                                            <span class="old-price">TJS{{p.old_price}}</span>
+                                            {% if p.old_price %}
+                                                <span class="old-price">TJS{{p.old_price}}</span>
+                                            {% endif %}
                                         </div>
                                         <div class="add-cart">
                                             <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{ p.id }}">
@@ -206,8 +174,20 @@
                                             <input type="hidden" class="product-id-{{ p.id }}" value="{{ p.id }}">
                                             <input type="hidden" class="product-title-{{ p.id }}" value="{{ p.title }}">
                                             <div class="d-flex">
-                                                <button class="add add-to-cart-btn" data-index="{{ p.id }}" style="border: none;" id="add-to-cart-btn"><i class="fi-rs-shopping-cart mr-5"></i>Add</button>
-                                                <button style="border: none; background: none;" class="add-to-wishlist" data-product-item="{{p.id}}"><i class="fi-rs-heart" style="fill: aqua;"></i></button>
+                                                <button class="add add-to-cart-btn" data-index="{{ p.id }}" style="border: none;" id="add-to-cart-btn">
+                                                {% if p.in_cart %}
+                                                <i class='fas fa-check-circle'></i>
+                                                    {% else %}
+                                                        <i class="fi-rs-shopping-cart mr-5"></i>Add
+                                                    {% endif %}
+                                                </button>
+                                                <button style="border: none; background: none;" class="add-to-wishlist" data-product-item="{{p.id}}">
+                                                    {% if p.id in wishlist_items %}
+                                                    <i class="fas fa-heart text-danger"></i>
+                                                    {% else %}
+                                                    <i class="fi-rs-heart"></i>
+                                                    {% endif %}
+                                                </button>
                                             </div>
                                             <!-- <button class="add add-to-cart-btn" data-index="{{ p.id }}" style="border: none;" id="add-to-cart-btn"><i class="fi-rs-shopping-cart mr-5"></i>Add</button> -->
                                         </div>

@@ -5,7 +5,7 @@ import random
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect
 from taggit.models import Tag
 
@@ -119,11 +119,11 @@ def dashboard_add_product(request):
 @login_required
 def dashboard_edit_product(request, pid):
     product = Product.objects.get(pid=pid)
-
     if request.method == "POST":
         form = AddProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
             new_form = form.save(commit=False)
+            new_form.user = request.user
             old_price = form.cleaned_data.get('old_price')
             if old_price == '':
                 new_form.old_price = None
@@ -167,8 +167,8 @@ def generate_otp(length=6):
 
 def send_verification_email(email, otp):
     subject = 'Email Verification'
-    message = f'Dear user,\n Your One-Time Password (OTP) for account verification is: {otp}\nDo not share this OTP with anyone for security reasons.'
-    from_email = 'advertise.website0994@gmail.com'  # Update with your email address
+    message = f'Dear user,\n\nYour One-Time Password (OTP) for account verification is: {otp}\n\nDo not share this OTP with anyone for security reasons.'
+    from_email = 'alicart.eshop@gmail.com'  # Update with your email address
     to_email = email
     try:
         send_mail(subject, message, from_email, [to_email])
@@ -198,10 +198,16 @@ def send_otp_view(request):
 
 @login_required
 def dashboard_statistics_superuser(request):
+    if not request.user.is_superuser:
+        messages.warning(request, 'You do not have permission to access this page!')
+        return redirect('core:index')
     revenue = CartOrder.objects.aggregate(price=Sum("price"))
     total_orders_count = CartOrder.objects.all()
     all_products = Product.objects.all()
     all_categories = Category.objects.all()
+
+    # Fetch latest orders in descending order based on the order date
+    latest_orders = CartOrder.objects.order_by('-order_date')
 
     this_month = datetime.datetime.now().month
     monthly_revenue = CartOrder.objects.filter(order_date__month=this_month).aggregate(price=Sum("price"))
@@ -211,6 +217,7 @@ def dashboard_statistics_superuser(request):
         "revenue": revenue,
         "all_products": all_products,
         "all_categories": all_categories,
+        "latest_orders": latest_orders,
         "total_orders_count": total_orders_count,
     }
     return render(request, "useradmin/dashboard_statistics.html", context)
@@ -218,6 +225,9 @@ def dashboard_statistics_superuser(request):
 
 @login_required
 def add_multiple_products(request):
+    if not request.user.is_superuser:
+        messages.warning(request, 'You do not have permission to access this page!')
+        return redirect('core:index')
     # Check if the form has been submitted previously
     form_submitted = request.session.get('form_submitted', False)
     if request.method == 'POST':
@@ -233,7 +243,10 @@ def add_multiple_products(request):
                     new_form.old_price = float(old_price)
                 except ValueError:
                     new_form.old_price = None
-
+            product_status = request.POST.get('product_status')
+            unit = request.POST.get('unit')
+            new_form.product_status = product_status
+            new_form.unit = unit
             # Save the form data to the Product model
             new_form.save()
             # Process tags input and save them properly
@@ -248,6 +261,7 @@ def add_multiple_products(request):
 
             # Set the session variable to True to indicate form submission
             request.session['form_submitted'] = True
+            messages.success(request, 'Product added successfully!')
             # Redirect to the same page with the filled form data
             return redirect('useradmin:add-multiple-products')
     else:

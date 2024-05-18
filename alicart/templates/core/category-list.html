@@ -30,45 +30,6 @@
                                     {{categories.count}} Categories
                                 </h2>
                             </div>
-                            <div class="sort-by-product-area">
-                                <div class="sort-by-cover mr-10">
-                                    <div class="sort-by-product-wrap">
-                                        <div class="sort-by">
-                                            <span><i class="fi-rs-apps"></i>Show:</span>
-                                        </div>
-                                        <div class="sort-by-dropdown-wrap">
-                                            <span> 50 <i class="fi-rs-angle-small-down"></i></span>
-                                        </div>
-                                    </div>
-                                    <div class="sort-by-dropdown">
-                                        <ul>
-                                            <li><a class="active" href="#">50</a></li>
-                                            <li><a href="#">100</a></li>
-                                            <li><a href="#">150</a></li>
-                                            <li><a href="#">200</a></li>
-                                            <li><a href="#">All</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="sort-by-cover">
-                                    <div class="sort-by-product-wrap">
-                                        <div class="sort-by">
-                                            <span><i class="fi-rs-apps-sort"></i>Sort:</span>
-                                        </div>
-                                        <div class="sort-by-dropdown-wrap">
-                                            <span>Featured <i class="fi-rs-angle-small-down"></i></span>
-                                        </div>
-                                    </div>
-                                    <div class="sort-by-dropdown">
-                                        <ul>
-                                            <li><a class="active" href="#">Featured</a></li>
-                                            <li><a href="#">Newest</a></li>
-                                            <li><a href="#">Most comments</a></li>
-                                            <li><a href="#">Release Date</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <div class="hello">
 
@@ -130,11 +91,13 @@
                             <div class="sidebar-widget widget-category-2 mb-50">
                                 <h5 class="section-title style-1 mb-30">Category</h5>
                                 <ul>
-                                    {% for c in categories %}
-                                    <li>
-                                        <a href="{% url 'core:category-product-list' c.cid %}"> <img src="{{c.image.url}}" alt="" />{{c.title}}</a><span class="count">{{c.category.count}}</span>
-                                    </li>
-                                    {% endfor %}
+
+                                {% for c in categories %}
+                                <li>
+                                <a href="{% url 'core:category-product-list' c.cid %}"> <img src="{{ c.image.url }}" alt="" style="width: 30px; height: 30px; object-fit: cover; border-radius: 10px;" />{{c.title}}</a><span class="count">{{c.product_count}}</span>
+                                </li>
+                                {% endfor %}
+
                                 </ul>
                             </div>
                         </div>

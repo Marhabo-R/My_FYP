@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+load_dotenv()
 from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -22,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%o9!c3rf02q6usr!vw^s96^t*(dsv&ezbs)_u_k7^z1oa$ik0r'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -53,8 +55,19 @@ INSTALLED_APPS = [
     'userauths',
 ]
 
+
+
+# Security settings
+# CSRF_TRUSTED_ORIGINS = ['', 'https://alicart.tj']
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -85,26 +98,29 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ecomprj.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': BASE_DIR / 'db.sqlite3',
-#    }
-# }
 
 DATABASES = {
      "default": {
          "ENGINE": "django.db.backends.postgresql",
-         "NAME": "alicart",
+         "NAME": "to-check",
          "USER": "postgres",
          "PASSWORD": "DataBase24",
          "HOST": "127.0.0.1",
          "PORT": "5432",
      }
  }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': os.getenv("ENGINE"),
+#         'NAME': os.getenv("PGNAME"),
+#         'USER': os.getenv("PGUSER"),
+#         'PASSWORD': os.getenv("PGPASSWORD"),
+#         'HOST': os.getenv("PGHOST"),
+#         'PORT': os.getenv("PGPORT"),
+#     }
+# }
 
 
 # Password validation
@@ -143,15 +159,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
+# STATIC_URL = '/static/'
 
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static"
+]
 
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
+# Configure WhiteNoise to add cache headers
+WHITENOISE_USE_FINDERS = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -164,15 +191,6 @@ JAZZMIN_SETTINGS = {
     'site_brand': "You order, we deliver",
     'site_logo': "assets/imgs/theme/loading.gif",
     'copyright': "alicart.com",
-    # "custom_links": {
-    #     "core": [{
-    #         "name": "Dashboard Statistics",
-    #         "url": "/core/dashboard_statistics/",
-    #         "icon": "fas fa-chart-line",  # Choose an appropriate icon
-            # "permissions": ["core.checkout"]
-    #     }]
-    # },
-
 }
 
 
@@ -391,16 +409,14 @@ CKEDITOR_5_CONFIGS = {
     },
 }
 
-
-
 PAYPAL_RECEIVER_EMAIL = 'rakhmatshoeva01@gmail.com'
 PAYPAL_TEST = True
 
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp-relay.brevo.com'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'advertise.website0994@gmail.com'
-EMAIL_HOST_PASSWORD = 'MGOmIXvc6gwKPQqU'
+EMAIL_HOST_USER = 'alicart.eshop@gmail.com'
+EMAIL_HOST_PASSWORD = 'txpx yfdl hpjs qcnp'
